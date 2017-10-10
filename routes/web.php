@@ -11,6 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'MainController@index')
+    ->name('index');
+
+Route::get('/{id}', 'MainController@getStudent')
+    ->where('id', '[0-9]+')
+    ->name('students.id');
+
+/* // Just for tests
+Route::get('/create_students/{amount}', 'MainController@createStudents')
+    ->where('amount', '[0-9]+')
+    ->name('students.create');
+*/
