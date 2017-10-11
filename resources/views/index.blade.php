@@ -3,13 +3,17 @@
 @section('title'){{ 'Главная | Список студентов' }}@endsection
 @section('description'){{ 'Главная страница тестового задания для Ant House. Список студентов.' }}@endsection
 
-{{--@section('stylesheets')--}}
-    {{--<style>--}}
-        {{--.student {--}}
-            {{--cursor: pointer;--}}
-        {{--}--}}
-    {{--</style>--}}
-{{--@endsection--}}
+@section('stylesheets')
+    <style>
+        .student {
+            cursor: pointer;
+        }
+
+        .dl-fix-a:hover, .dl-fix-a:active, .dl-fix-a:visited {
+            text-decoration: none;
+        }
+    </style>
+@endsection
 
 @section('content')
     <div class="container">
@@ -19,7 +23,7 @@
                     <tr>
                         @if(isset($sort))
                         <th>
-                            <a href="{{ route('students.sort', [
+                            <a class="dl-fix-a" href="{{ route('students.sort', [
                                     'column' => 'firstName',
                                     'direction' => $sort->column == 'firstName' ? ($sort->direction == 'asc' ? 'desc' : 'asc') : 'asc'
                                 ]) }}">
@@ -28,7 +32,7 @@
                                 @endif</a>
                         </th>
                         <th>
-                            <a href="{{ route('students.sort', [
+                            <a class="dl-fix-a" href="{{ route('students.sort', [
                                     'column' => 'lastName',
                                     'direction' => $sort->column == 'lastName' ? ($sort->direction == 'asc' ? 'desc' : 'asc') : 'asc'
                                 ]) }}">
@@ -37,7 +41,7 @@
                                 @endif</a>
                         </th>
                         <th>
-                            <a href="{{ route('students.sort', [
+                            <a class="dl-fix-a" href="{{ route('students.sort', [
                                     'column' => 'squad',
                                     'direction' => $sort->column == 'squad' ? ($sort->direction == 'asc' ? 'desc' : 'asc') : 'asc'
                                 ]) }}">
@@ -46,7 +50,7 @@
                                 @endif</a>
                         </th>
                         <th>
-                            <a href="{{ route('students.sort', [
+                            <a class="dl-fix-a" href="{{ route('students.sort', [
                                     'column' => 'points',
                                     'direction' => $sort->column == 'points' ? ($sort->direction == 'desc' ? 'asc' : 'desc') : 'desc'
                                 ]) }}">
@@ -55,23 +59,23 @@
                                 @endif</a>
                         </th>
                         @else
-                        <th>Имя</th>
-                        <th>Фамилия</th>
-                        <th>№ группы</th>
-                        <th>Баллов <i class="fa fa-caret-square-o-up" aria-hidden="true"></i></th>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>№ группы</th>
+                            <th>Баллов <i class="fa fa-caret-square-o-up" aria-hidden="true"></i></th>
                         @endif
                     </tr>
                 </thead>
             @isset($students)
-            @foreach($students as &$student)
-                <tr class="student">
-                    <input type="hidden" value="{{ $student->id }}">
-                    <th scope="row">{{ $student->firstName }}</th>
-                    <td>{{ $student->lastName }}</td>
-                    <td>{{ $student->squad }}</td>
-                    <td>{{ $student->points }}</td>
-                </tr>
-            @endforeach
+                @foreach($students as &$student)
+                    <tr class="student">
+                        <input type="hidden" value="{{ $student->id }}">
+                        <th scope="row">{{ $student->firstName }}</th>
+                        <td>{{ $student->lastName }}</td>
+                        <td>{{ $student->squad }}</td>
+                        <td>{{ $student->points }}</td>
+                    </tr>
+                @endforeach
             @endisset
             </table>
         </div>
@@ -82,7 +86,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 id="student-head" class="modal-title">Modal title</h4>
+                    <h4 id="student-head" class="modal-title"> Имя фамилия</h4>
                 </div>
                 <div class="modal-body">
                     <p id="student-id">Идентификационный номер: <span></span></p>
@@ -126,7 +130,7 @@
                     modal.email.empty().append(response.email);
                     modal.birth.empty().append(response.birth);
                     modal.squad.empty().append(response.squad);
-                    modal.foreign.empty().append(response.foreign ? (response.sex ? "приезжий" : "приезжая") : (response.sex ? "местный" : "местная"));
+                    modal.foreign.empty().append(response.foreign ? (response.sex ? "иногородний" : "иногородняя") : (response.sex ? "местный" : "местная"));
                     modal.points.empty().append(response.points);
 
                     modal_body.modal();

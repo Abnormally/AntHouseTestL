@@ -18,7 +18,7 @@
             {{-- Left Side Of Navbar --}}
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="">
+                    <a href="{{ route('students.register') }}">
                         <span class="fa fa-pencil"></span> Регистрация
                     </a>
                 </li>

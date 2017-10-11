@@ -22,6 +22,14 @@ class Student extends Model
         'points'
     ];
 
+    /**
+     * Return paginator with selected sort order
+     *
+     * @param string $column
+     * @param string $direction
+     * @param int $amount
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public static function getPagination($column, $direction = 'asc', $amount = 50) {
         return self::selectRaw('*')
             ->orderBy($column, $direction)

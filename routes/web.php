@@ -23,6 +23,12 @@ Route::get('/{column}/{direction}', 'MainController@setSortCookie')
     ->where('direction', 'asc|desc')
     ->name('students.sort');
 
+Route::get('/register', 'MainController@registrationPage')
+    ->name('students.register');
+
+Route::post('/register', 'MainController@registration')
+    ->name('');
+
 /* // Just for tests
 Route::get('/create_students/{amount}', 'MainController@createStudents')
     ->where('amount', '[0-9]+')
