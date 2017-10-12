@@ -25,8 +25,16 @@
             </ul>
 
             {{-- Right Side Of Navbar --}}
-            <ul class="nav navbar-nav navbar-right">
-            </ul>
+            <form class="navbar-form navbar-right" method="get" action="{{ route('students.search') }}">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="query" placeholder="Поиск">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">Найти!</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
         </div>
     </nav>
 </header>

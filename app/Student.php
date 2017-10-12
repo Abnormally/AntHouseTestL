@@ -35,4 +35,22 @@ class Student extends Model
             ->orderBy($column, $direction)
             ->paginate($amount);
     }
+
+    /**
+     * Return paginator with selected sort order for search query
+     *
+     * @param string $search
+     * @param string $column
+     * @param string $direction
+     * @param int $amount
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public static function getSearchPagination($search, $column, $direction = 'asc', $amount = 50) {
+        return self::selectRaw('*')
+            ->where('firstName', 'like', "%{$search}%")
+            ->orWhere('lastName', 'like', "%{$search}%")
+            ->orWhere('squad', 'like', "%{$search}%")
+            ->orderBy($column, $direction)
+            ->paginate($amount);
+    }
 }

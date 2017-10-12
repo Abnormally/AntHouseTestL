@@ -14,6 +14,9 @@
 Route::get('/', 'MainController@index')
     ->name('index');
 
+Route::get('/search', 'MainController@search')
+    ->name('students.search');
+
 Route::get('/{id}', 'MainController@getStudent')
     ->where('id', '[0-9]+')
     ->name('students.id');
@@ -23,11 +26,13 @@ Route::get('/{column}/{direction}', 'MainController@setSortCookie')
     ->where('direction', 'asc|desc')
     ->name('students.sort');
 
-Route::get('/register', 'MainController@registrationPage')
-    ->name('students.register');
+Route::group(['prefix' => 'register'], function () {
+    Route::get('/', 'MainController@registrationPage')
+        ->name('students.register');
 
-Route::post('/register', 'MainController@registration')
-    ->name('');
+    Route::post('/', 'MainController@registration')
+        ->name('');
+});
 
 /* // Just for tests
 Route::get('/create_students/{amount}', 'MainController@createStudents')

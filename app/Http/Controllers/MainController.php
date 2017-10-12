@@ -13,9 +13,11 @@ class MainController extends Controller
      * Returns index page with students sorted by exam points
      *
      * @param Request $request
+     * @param bool $search
+     * @param string $query
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request) {
+    public function index(Request $request, $search = false, $query = "") {
         $cookie = $request->cookie('sort');
 
         if (!$cookie) {
@@ -34,9 +36,25 @@ class MainController extends Controller
         }
 
         return view('index', [
-            'students' => Student::getPagination($options->column, $options->direction, $options->amount),
+            'students' => $search ?
+                Student::getSearchPagination($query, $options->column, $options->direction, $options->amount)
+                : Student::getPagination($options->column, $options->direction, $options->amount),
             'sort' => $options
         ]);
+    }
+
+    public function search(Request $request) {
+        if (!$request->has('query') && !$request->hasCookie('search')) return redirect()->route('index');
+
+        $query = $request->get('query');
+        $cookie = $request->cookie('search');
+
+        if ($query) {
+            Cookie::queue(Cookie::make('search', $query));
+            return $this->index($request, true, $query);
+        }
+
+        return $this->index($request, true, $cookie);
     }
 
     /**
@@ -70,6 +88,12 @@ class MainController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Return register page with student or object with empty fields
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function registrationPage(Request $request) {
         if ($request->hasCookie('registered')) {
             $student = Student::find(json_decode($request->cookie('registered'))->id);
@@ -91,16 +115,22 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * Creates or updates student
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function registration(Request $request) {
         $request->validate([
-            "firstName" => ['bail', 'required', 'string', 'min:2', 'max:100'],
-            "lastName" => ['bail', 'required', 'string', 'min:2', 'max:100'],
-            "sex" => ['bail', 'required', 'integer', 'min:0', 'max:1'],
-            "squad" => ['bail', 'required', 'min:2', 'max:5'],
-            "email" => ['bail', 'required', 'string', 'email', 'max:200'],
-            "points" => ['bail', 'required', 'min:0', 'max:300'],
+            "firstName" => ['bail', 'required', 'alpha', 'min:2', 'max:100'],
+            "lastName" => ['bail', 'required', 'alpha', 'min:2', 'max:100'],
+            "sex" => ['bail', 'required', 'boolean'],
+            "squad" => ['bail', 'required', 'alpha_num', 'min:2', 'max:5'],
+            "email" => ['bail', 'required', 'email', 'max:200'],
+            "points" => ['bail', 'required', 'integer', 'min:0', 'max:300'],
             "birth" => ['bail', 'required', 'date'],
-            "foreign" => ['bail', 'required', 'integer', 'min:0', 'max:1']
+            "foreign" => ['bail', 'required', 'boolean']
         ]);
 
         if ($request->hasCookie('registered')) {
@@ -144,7 +174,7 @@ class MainController extends Controller
         Cookie::queue(Cookie::make('registered', json_encode([
             'id' => $student->id,
             'email' => $student->email
-        ])));
+        ]), 5256000));
 
         return redirect()->route('index');
     }
